@@ -1,69 +1,71 @@
-# ------------------- USER INPUT -------------------
-shift1 = int(input("Enter shift1: "))
-shift2 = int(input("Enter shift2: "))
+# USER INPUT
+first_shift = int(input("Enter shift1: "))
+second_shift = int(input("Enter shift2: "))
 
-# ------------------- READ ORIGINAL TEXT -------------------
-with open("raw_text.txt", "r") as f:
-    text = f.read()
+# READ RAW TEXT
+with open("raw_text.txt", "r") as file:
+    original_text = file.read()
 
-# ------------------- ENCRYPTION -------------------
-encrypted_text = ""
+# ENCRYPTION LOGIC
+cipher_text = ""
 
-for ch in text:
-    if ch.islower():
-        if ch <= 'm':
-            encrypted_text += chr((ord(ch) - 97 + shift1 * shift2) % 26 + 97)
+# LOOP & CONDITIONS CHECKS FOR ENCRYPTION
+for char in original_text:
+    if char.islower(): # lowercase condition
+        if char <= 'm':
+            cipher_text += chr((ord(char) - 97 + first_shift * second_shift) % 26 + 97)
         else:
-            encrypted_text += chr((ord(ch) - 97 - (shift1 + shift2)) % 26 + 97)
-    elif ch.isupper():
-        if ch <= 'M':
-            encrypted_text += chr((ord(ch) - 65 - shift1) % 26 + 65)
+            cipher_text += chr((ord(char) - 97 - (first_shift + second_shift)) % 26 + 97)
+    elif char.isupper(): # uppercase condition
+        if char <= 'M':
+            cipher_text += chr((ord(char) - 65 - first_shift) % 26 + 65)
         else:
-            encrypted_text += chr((ord(ch) - 65 + shift2**2) % 26 + 65)
+            cipher_text += chr((ord(char) - 65 + second_shift ** 2) % 26 + 65)
     else:
-        encrypted_text += ch  # spaces, punctuation, numbers unchanged
+        cipher_text += char # ignore spaces, punctuation, numbers
 
-# Save encrypted text
-with open("encrypted_text.txt", "w") as f:
-    f.write(encrypted_text)
+# SAVE ENCRYPTED TEXT
+with open("encrypted_text.txt", "w") as file:
+    file.write(cipher_text)
 
 print("\nEncrypted text saved to 'encrypted_text.txt'")
 
-# ------------------- DECRYPTION -------------------
-decrypted_text = ""
+# DECRYPTION LOGIC
+plain_text = ""
 
-for i in range(len(text)):
-    ch_original = text[i]         # original character
-    ch_encrypted = encrypted_text[i]  # corresponding encrypted character
+# LOOP & CONDITIONS CHECKS FOR DECRYPTION (REVERSE LOGIC)
+for index in range(len(original_text)):
+    original_char = original_text[index]
+    encrypted_char = cipher_text[index]
 
-    if ch_original.islower():
-        if ch_original <= 'm':
-            decrypted_text += chr((ord(ch_encrypted) - 97 - shift1 * shift2) % 26 + 97)
+    if original_char.islower(): # lowercase condition
+        if original_char <= 'm':
+            plain_text += chr((ord(encrypted_char) - 97 - first_shift * second_shift) % 26 + 97)
         else:
-            decrypted_text += chr((ord(ch_encrypted) - 97 + (shift1 + shift2)) % 26 + 97)
-    elif ch_original.isupper():
-        if ch_original <= 'M':
-            decrypted_text += chr((ord(ch_encrypted) - 65 + shift1) % 26 + 65)
+            plain_text += chr((ord(encrypted_char) - 97 + (first_shift + second_shift)) % 26 + 97)
+    elif original_char.isupper(): # uppercase condition
+        if original_char <= 'M':
+            plain_text += chr((ord(encrypted_char) - 65 + first_shift) % 26 + 65)
         else:
-            decrypted_text += chr((ord(ch_encrypted) - 65 - shift2**2) % 26 + 65)
+            plain_text += chr((ord(encrypted_char) - 65 - second_shift ** 2) % 26 + 65)
     else:
-        decrypted_text += ch_encrypted  # spaces, punctuation, numbers unchanged
+        plain_text += encrypted_char  # ignore spaces, punctuation, numbers
 
-# Save decrypted text
-with open("decrypted_text.txt", "w") as f:
-    f.write(decrypted_text)
+# SAVE DECRYPTED TEXT
+with open("decrypted_text.txt", "w") as file:
+    file.write(plain_text)
 
 print("Decrypted text saved to 'decrypted_text.txt'")
 
-# ------------------- VERIFICATION -------------------
-with open("raw_text.txt", "r") as f:
-    original = f.read()
+# VERIFY BOTH FILES ARE SAME
+with open("raw_text.txt", "r") as file:
+    original_file_text = file.read()
 
-with open("decrypted_text.txt", "r") as f:
-    decrypted = f.read()
+with open("decrypted_text.txt", "r") as file:
+    decrypted_file_text = file.read()
 
-if original == decrypted:
-    print("\n Decryption successful! Files match.")
+# CONDITIONS CHECK AND GIVING RESPONSE
+if original_file_text == decrypted_file_text: 
+    print("\n Decryption completed Files is match.")
 else:
-    print("\n Decryption failed! Files do not match.")
- 
+    print("\n Decryption fail Files do not match.")
